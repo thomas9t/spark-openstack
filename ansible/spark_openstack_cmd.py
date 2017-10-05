@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
-
 from __future__ import print_function
 import argparse
 import sys
@@ -12,7 +10,6 @@ import urllib
 from zipfile import ZipFile
 from shutil import rmtree
 import urlparse
-
 
 spark_versions = \
     {
@@ -43,8 +40,8 @@ spark_versions = \
 
 toree_versions = \
     {
-        "1" :  "http://apache.org/dist/incubator/toree/0.1.0-incubating/toree-pip/apache-toree-0.1.0.tar.gz",
-        "2" :  "https://dist.apache.org/repos/dist/dev/incubator/toree/0.2.0/snapshots/dev1/toree-pip/toree-0.2.0.dev1.tar.gz"
+        "1": "http://apache.org/dist/incubator/toree/0.1.0-incubating/toree-pip/apache-toree-0.1.0.tar.gz",
+        "2": "https://dist.apache.org/repos/dist/dev/incubator/toree/0.2.0/snapshots/dev1/toree-pip/toree-0.2.0.dev1.tar.gz"
     }
 
 parser = argparse.ArgumentParser(description='Spark cluster deploy tools for Openstack.',
@@ -62,18 +59,21 @@ parser.add_argument('option', nargs='?')
 parser.add_argument('-k', '--key-pair')
 parser.add_argument("-i", "--identity-file")
 parser.add_argument("-s", "--slaves", type=int)
-parser.add_argument("-n", "--virtual-network", help="Your virtual Openstack network id for cluster. If have only one network, you may not specify it")
+parser.add_argument("-n", "--virtual-network",
+                    help="Your virtual Openstack network id for cluster. If have only one network, you may not specify it")
 parser.add_argument("-f", "--floating-ip-pool", help="Floating IP pool")
 parser.add_argument("-t", "--instance-type")
-parser.add_argument("-m", "--master-instance-type", help="master instance type, defaults to same as slave instance type")
+parser.add_argument("-m", "--master-instance-type",
+                    help="master instance type, defaults to same as slave instance type")
 parser.add_argument("-a", "--image-id")
 parser.add_argument("-w", help="ignored")
 parser.add_argument("--use-oracle-java", action="store_true", help="Use Oracle Java. If not set, OpenJDK is used")
 parser.add_argument("--spark-worker-mem-mb", type=int, help="force worker memory value in megabytes (e.g. 14001)")
 parser.add_argument("-j", "--deploy-jupyter", action='store_true', help="Should we deploy jupyter on master node.")
-parser.add_argument("-jh", "--deploy-jupyterhub",action='store_true', help="Should we deploy jupyterHub on master node")
-parser.add_argument("--spark-version", default="1.6.2", help="Spark version to use")
-parser.add_argument("--hadoop-version", help="Hadoop version to use")
+parser.add_argument("-jh", "--deploy-jupyterhub", action='store_true',
+                    help="Should we deploy jupyterHub on master node")
+parser.add_argument("--spark-version", default="2.2.0", help="Spark version to use")
+parser.add_argument("--hadoop-version", default="2.7", help="Hadoop version to use")
 parser.add_argument("--boot-from-volume", default=False, help="Should the cluster be based on Cinder volumes. "
                                                               "Use it wisely")
 parser.add_argument("--hadoop-user", default="ubuntu", help="User to use/create for cluster members")
@@ -87,10 +87,12 @@ parser.add_argument("--swift-password", help="Username for Swift object storage.
 parser.add_argument("--nfs-share", default=[], nargs=2, metavar=("<nfs-path>", "<mount-path>"),
                     help="Should we mount some NFS share(s) on instances",
                     action='append')
-parser.add_argument("--extra-jars", action="append", help="Add/replace extra jars to Spark (during launch). Jar file names must be different")
+parser.add_argument("--extra-jars", action="append",
+                    help="Add/replace extra jars to Spark (during launch). Jar file names must be different")
 
 parser.add_argument("--deploy-ignite", action='store_true', help="Should we deploy Apache Ignite.")
-parser.add_argument("--ignite-memory", default=50, type=float, help="Percentage of Spark worker memory to be given to Apache Ignite.")
+parser.add_argument("--ignite-memory", default=50, type=float,
+                    help="Percentage of Spark worker memory to be given to Apache Ignite.")
 parser.add_argument("--ignite-version", default="1.7.0", help="Apache Ignite version to use.")
 
 parser.add_argument("--yarn", action='store_true', help="Should we deploy using Apache YARN.")
@@ -106,8 +108,7 @@ parser.add_argument("--async", action="store_true",
 parser.add_argument("--tags", help="Ansible: run specified tags")
 parser.add_argument("--skip-tags", help="Ansible: skip specified tags")
 
-
-#parser.add_argument("--step", action="store_true", help="Execute play step-by-step")
+# parser.add_argument("--step", action="store_true", help="Execute play step-by-step")
 
 args, unknown = parser.parse_known_args()
 if args.tags is not None:
@@ -137,15 +138,14 @@ def get_cassandra_connector_jar(spark_version):
         if args.spark_version.startswith("1.6") \
         else "http://dl.bintray.com/spark-packages/maven/datastax/spark-cassandra-connector/2.0.3-s_2.11/spark-cassandra-connector-2.0.3-s_2.11.jar"
 
-    spark_cassandra_connector_filename = "/tmp/" + os.path.basename(urlparse.urlsplit(spark_cassandra_connector_url).path)
-
+    spark_cassandra_connector_filename = "/tmp/" + os.path.basename(
+        urlparse.urlsplit(spark_cassandra_connector_url).path)
 
     if not os.path.exists(spark_cassandra_connector_filename):
         print("Downloading Spark Cassandra Connector for Spark version {0}".format(spark_version))
-        urllib.urlretrieve(spark_cassandra_connector_url,filename=spark_cassandra_connector_filename)
+        urllib.urlretrieve(spark_cassandra_connector_url, filename=spark_cassandra_connector_filename)
 
     return spark_cassandra_connector_filename
-
 
 
 def get_elastic_jar():
@@ -163,6 +163,7 @@ def get_elastic_jar():
         return elastic_path
     else:
         return elastic_path
+
 
 def make_extra_vars():
     extra_vars = dict()
@@ -209,7 +210,6 @@ def make_extra_vars():
     if not extra_vars["os_swift_password"]:
         del extra_vars["os_swift_password"]
 
-
     extra_vars["use_oracle_java"] = args.use_oracle_java
 
     extra_vars["deploy_jupyter"] = args.deploy_jupyter
@@ -217,15 +217,15 @@ def make_extra_vars():
         extra_vars["toree_version"] = toree_versions[extra_vars["spark_version"][0]]
 
     extra_vars["deploy_jupyterhub"] = args.deploy_jupyterhub
-    extra_vars["nfs_shares"] = [{"nfs_path": l[0], "mount_path": l[1]} for l in  args.nfs_share]
+    extra_vars["nfs_shares"] = [{"nfs_path": l[0], "mount_path": l[1]} for l in args.nfs_share]
 
     extra_vars["use_yarn"] = args.yarn
 
-    #ElasticSearch deployment => --extra-args
+    # ElasticSearch deployment => --extra-args
     extra_vars["deploy_elastic"] = args.deploy_elastic
     extra_vars["es_heap_size"] = args.es_heap_size
 
-    #Cassandra deployment => --extra-args
+    # Cassandra deployment => --extra-args
     extra_vars["deploy_cassandra"] = args.deploy_cassandra
     extra_vars["cassandra_version"] = args.cassandra_version
 
@@ -237,8 +237,10 @@ def make_extra_vars():
         args.extra_jars = []
 
     extra_jars = list()
+
     def add_jar(path):
         extra_jars.append({"name": os.path.basename(path), "path": os.path.abspath(path)})
+
     for jar in args.extra_jars:
         if os.path.isdir(jar):
             for f in os.listdir(jar):
@@ -254,7 +256,6 @@ def make_extra_vars():
     if args.deploy_elastic:
         elastic_jar = get_elastic_jar()
         add_jar(elastic_jar)
-
 
     extra_vars["extra_jars"] = extra_jars
 
@@ -288,16 +289,19 @@ def get_master_ip():
                                    args.cluster_name + "-master"])
     return parse_host_ip(res)
 
+
 def ssh_output(host, cmd):
     return subprocess.check_output(["ssh", "-q", "-t", "-o", "StrictHostKeyChecking=no",
-                                    "-o", "UserKnownHostsFile=/dev/null",
-                                    "-i", args.identity_file, "ubuntu@" + host, cmd])
+                                             "-o", "UserKnownHostsFile=/dev/null",
+                                             "-i", args.identity_file, "ubuntu@" + host, cmd])
+
 
 def ssh_first_slave(master_ip, cmd):
-    #can't do `head -n1 /opt/spark/conf/slaves` since it's not deployed yet
+    # can't do `head -n1 /opt/spark/conf/slaves` since it's not deployed yet
     return ssh_output(master_ip, "ssh %s-slave-1 '%s'" % (args.cluster_name, cmd.replace("'", "'\\''")))
 
-#FIXME: copied from https://github.com/amplab/spark-ec2/blob/branch-1.5/deploy_templates.py
+
+# FIXME: copied from https://github.com/amplab/spark-ec2/blob/branch-1.5/deploy_templates.py
 def get_worker_mem_mb(master_ip):
     if args.spark_worker_mem_mb is not None:
         return args.spark_worker_mem_mb
@@ -305,18 +309,18 @@ def get_worker_mem_mb(master_ip):
     slave_ram_kb = int(ssh_first_slave(master_ip, mem_command))
     slave_ram_mb = slave_ram_kb // 1024
     # Leave some RAM for the OS, Hadoop daemons, and system caches
-    if slave_ram_mb > 100*1024:
-        slave_ram_mb = slave_ram_mb - 15 * 1024 # Leave 15 GB RAM
-    elif slave_ram_mb > 60*1024:
-        slave_ram_mb = slave_ram_mb - 10 * 1024 # Leave 10 GB RAM
-    elif slave_ram_mb > 40*1024:
-        slave_ram_mb = slave_ram_mb - 6 * 1024 # Leave 6 GB RAM
-    elif slave_ram_mb > 20*1024:
-        slave_ram_mb = slave_ram_mb - 3 * 1024 # Leave 3 GB RAM
-    elif slave_ram_mb > 10*1024:
-        slave_ram_mb = slave_ram_mb - 2 * 1024 # Leave 2 GB RAM
+    if slave_ram_mb > 100 * 1024:
+        slave_ram_mb = slave_ram_mb - 15 * 1024  # Leave 15 GB RAM
+    elif slave_ram_mb > 60 * 1024:
+        slave_ram_mb = slave_ram_mb - 10 * 1024  # Leave 10 GB RAM
+    elif slave_ram_mb > 40 * 1024:
+        slave_ram_mb = slave_ram_mb - 6 * 1024  # Leave 6 GB RAM
+    elif slave_ram_mb > 20 * 1024:
+        slave_ram_mb = slave_ram_mb - 3 * 1024  # Leave 3 GB RAM
+    elif slave_ram_mb > 10 * 1024:
+        slave_ram_mb = slave_ram_mb - 2 * 1024  # Leave 2 GB RAM
     else:
-        slave_ram_mb = max(512, slave_ram_mb - 1300) # Leave 1.3 GB RAM
+        slave_ram_mb = max(512, slave_ram_mb - 1300)  # Leave 1.3 GB RAM
     return slave_ram_mb
 
 
@@ -325,26 +329,23 @@ def get_master_mem(master_ip):
     master_ram_kb = int(ssh_output(master_ip, mem_command))
     master_ram_mb = master_ram_kb // 1024
     # Leave some RAM for the OS, Hadoop daemons, and system caches
-    if master_ram_mb > 100*1024:
-        master_ram_mb = master_ram_mb - 15 * 1024 # Leave 15 GB RAM
-    elif master_ram_mb > 60*1024:
-        master_ram_mb = master_ram_mb - 10 * 1024 # Leave 10 GB RAM
-    elif master_ram_mb > 40*1024:
-        master_ram_mb = master_ram_mb - 6 * 1024 # Leave 6 GB RAM
-    elif master_ram_mb > 20*1024:
-        master_ram_mb = master_ram_mb - 3 * 1024 # Leave 3 GB RAM
-    elif master_ram_mb > 10*1024:
-        master_ram_mb = master_ram_mb - 2 * 1024 # Leave 2 GB RAM
+    if master_ram_mb > 100 * 1024:
+        master_ram_mb = master_ram_mb - 15 * 1024  # Leave 15 GB RAM
+    elif master_ram_mb > 60 * 1024:
+        master_ram_mb = master_ram_mb - 10 * 1024  # Leave 10 GB RAM
+    elif master_ram_mb > 40 * 1024:
+        master_ram_mb = master_ram_mb - 6 * 1024  # Leave 6 GB RAM
+    elif master_ram_mb > 20 * 1024:
+        master_ram_mb = master_ram_mb - 3 * 1024  # Leave 3 GB RAM
+    elif master_ram_mb > 10 * 1024:
+        master_ram_mb = master_ram_mb - 2 * 1024  # Leave 2 GB RAM
     else:
-        master_ram_mb = max(512, master_ram_mb - 1300) # Leave 1.3 GB RAM
+        master_ram_mb = max(512, master_ram_mb - 1300)  # Leave 1.3 GB RAM
     return "%s" % master_ram_mb
 
 
 def get_slave_cpus(master_ip):
     return int(ssh_first_slave(master_ip, "nproc"))
-
-
-
 
 
 cmdline = [ansible_playbook_cmd]
@@ -358,16 +359,17 @@ if args.action == "launch":
     subprocess.call(cmdline_create)
 
     with open(os.devnull, "w") as devnull:
-        subprocess.call(["./openstack_inventory.py", "--refresh", "--list"], stdout=devnull) # refresh openstack cache
-
+        subprocess.call(["./openstack_inventory.py", "--refresh", "--list"], stdout=devnull)  # refresh openstack cache
 
     cmdline_initial_setup_status = cmdline[:]
-    cmdline_initial_setup_status.extend([ "-i", "openstack_inventory.py", "deploy_ssh.yml", "--extra-vars", repr(extra_vars)])
+    cmdline_initial_setup_status.extend(
+        ["-i", "openstack_inventory.py", "deploy_ssh.yml", "--extra-vars", repr(extra_vars)])
     initial_setup_status = subprocess.call(cmdline_initial_setup_status)
 
     if initial_setup_status != 0:
         print("One of your instances didn't come up; please do the following:")
-        print("    1. Check your instances states in your Openstack dashboard; if there are any in ERROR state, terminate them")
+        print(
+            "    1. Check your instances states in your Openstack dashboard; if there are any in ERROR state, terminate them")
         print("    2. Rerun the script (no need for destroy; it will continue working skipping the work already done)")
         exit(initial_setup_status)
     master_ip = get_master_ip()
@@ -377,10 +379,10 @@ if args.action == "launch":
         extra_vars["yarn_master_mem_mb"] = get_master_mem(master_ip)
     else:
         worker_mem_mb = get_worker_mem_mb(master_ip)
-        ignite_mem_ratio = args.ignite_memory/100.0
-        #FIXME: improve rounding
-        extra_vars["spark_worker_mem_mb"] = int(worker_mem_mb*(1-ignite_mem_ratio))
-        extra_vars["ignite_mem_mb"] = int(worker_mem_mb*ignite_mem_ratio)
+        ignite_mem_ratio = args.ignite_memory / 100.0
+        # FIXME: improve rounding
+        extra_vars["spark_worker_mem_mb"] = int(worker_mem_mb * (1 - ignite_mem_ratio))
+        extra_vars["ignite_mem_mb"] = int(worker_mem_mb * ignite_mem_ratio)
         extra_vars["yarn_master_mem_mb"] = get_master_mem(master_ip)
 
     extra_vars["spark_worker_cores"] = get_slave_cpus(master_ip)
@@ -388,7 +390,7 @@ if args.action == "launch":
     cmdline_inventory.extend(["-v", "-i", "openstack_inventory.py", "deploy.yml", "--extra-vars", repr(extra_vars)])
     subprocess.call(cmdline_inventory)
 
-    print("Cluster launched successfully; Master IP is %s"%(master_ip))
+    print("Cluster launched successfully; Master IP is %s" % (master_ip))
 elif args.action == "destroy":
     res = subprocess.check_output([ansible_cmd,
                                    "-i", "openstack_inventory.py",
@@ -408,13 +410,14 @@ elif args.action == "config":
     extra_vars['roles_dir'] = '../roles'
 
     cmdline_inventory = cmdline[:]
-    if args.option == 'restart-spark': #Skip installation tasks, run only detect_conf tasks
+    if args.option == 'restart-spark':  # Skip installation tasks, run only detect_conf tasks
         cmdline_inventory.extend(("--skip-tags", "spark_install"))
 
     elif args.option == 'restart-cassandra':
         cmdline_inventory.extend(("--skip-tags", "spark_install,cassandra"))
 
-    cmdline_inventory.extend(["-i", "openstack_inventory.py", "actions/%s.yml" % args.option, "--extra-vars", repr(extra_vars)])
+    cmdline_inventory.extend(
+        ["-i", "openstack_inventory.py", "actions/%s.yml" % args.option, "--extra-vars", repr(extra_vars)])
     subprocess.call(cmdline_inventory, env=env)
 else:
     err("unknown action: " + args.action)

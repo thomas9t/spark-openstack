@@ -69,7 +69,7 @@
       template: src=templates/config.j2 dest="/home/{{ hadoop_user }}/.ssh/config"
 
     - name: modify /etc/hosts
-      lineinfile: dest=/etc/hosts state=present line="{{ hostvars[item].openstack.private_v4}} {{ hostvars[item].openstack.name }}"
+      lineinfile: dest=/etc/hosts state=present line="{{ hostvars[item].openstack.public_v4}} {{ hostvars[item].openstack.name }}"
       with_items: "{{ play_hosts }}"
     #  template: src=templates/hosts.j2 dest=/etc/hosts
   tags: prepare
