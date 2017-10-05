@@ -8,7 +8,7 @@
     - { role: cassandra, when: deploy_cassandra }
     - spark_common
     - { role: ignite_config, when: deploy_ignite }
-    - { role: spark_genisys, when: deploy_genisys}
+    - { role: genisys, when: deploy_genisys}
     - mountnfs
 
 
