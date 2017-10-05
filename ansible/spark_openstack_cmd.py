@@ -262,6 +262,7 @@ def make_extra_vars():
     extra_vars["extra_jars"] = extra_jars
 
     extra_vars["deploy_ignite"] = args.deploy_ignite
+    extra_vars["deploy_genisys"] = args.deploy_genisys
     extra_vars["ignite_version"] = args.ignite_version
 
     return extra_vars
