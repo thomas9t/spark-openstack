@@ -1,7 +1,7 @@
 ## Adopted from <a href="https://github.com/ispras/spark-openstack">https://github.com/ispras/spark-openstack</a> and modified to work on <a href="https://www.cloudlab.us/">CloudLab</a> OpenStack profile (verified on Ubuntu 16.04 image).
  
     $ ./spark-openstack -k <key-name> -i <key-file> -s 2 -t m1.xlarge -a <os-image-id> \
-    -n <network-id> -f <ext-net-id> --spark-worker-mem-mb 10240 (launch|destroy|master-ip) <cluster-name>
+    -n <network-id> -f <ext-net-id> --deploy-genisys (launch|destroy|master-ip) <cluster-name>
     
 # Spark cluster deploy tools for Openstack
 
