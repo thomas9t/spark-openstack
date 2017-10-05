@@ -90,6 +90,8 @@ parser.add_argument("--nfs-share", default=[], nargs=2, metavar=("<nfs-path>", "
 parser.add_argument("--extra-jars", action="append",
                     help="Add/replace extra jars to Spark (during launch). Jar file names must be different")
 
+parser.add_argument("--deploy-genisys", action="store_true", help="Should we deploy dependencies for the genisys "
+                                                                  "project")
 parser.add_argument("--deploy-ignite", action='store_true', help="Should we deploy Apache Ignite.")
 parser.add_argument("--ignite-memory", default=50, type=float,
                     help="Percentage of Spark worker memory to be given to Apache Ignite.")
