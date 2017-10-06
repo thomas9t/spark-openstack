@@ -33,4 +33,4 @@
   file: path=/mnt/hdfs state=directory mode=0755 owner={{ hadoop_user }}
 
 - name: create dir for spark-events
-  file: path=/tmp/spark-events state=directory mode=0755 owner={{ hadoop_user }}
+  file: path=/tmp/spark-events state=directory mode=0775 owner={{ hadoop_user }} group=hadoop
