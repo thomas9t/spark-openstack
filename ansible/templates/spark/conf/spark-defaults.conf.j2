@@ -14,7 +14,6 @@ spark.eventLog.enabled true
 spark.eventLog.dir /tmp/spark-events
 spark.history.fs.logDirectory file:///tmp/spark-events
 spark.serializer    org.apache.spark.serializer.KryoSerializer
-spark.executor.extraJavaOptions  -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three" -Xmn5
 
 # TODO: n_slaves*executor_per_slave - 1 for YARN, n_slaves - for standalone
 spark.executor.instances  {{ n_slaves }}
