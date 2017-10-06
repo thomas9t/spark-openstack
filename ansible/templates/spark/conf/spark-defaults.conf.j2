@@ -11,8 +11,9 @@ spark.driver.extraClassPath {{spark_extra_jars_list}}{{ignite_cp|default("")}}
 
 spark.master    {{  "spark://%s:7077" % active_master_ip if not use_yarn else "yarn" }}
 spark.eventLog.enabled true
-spark.eventLog.dir /tmp/
+spark.eventLog.dir /tmp/spark
 spark.serializer    org.apache.spark.serializer.KryoSerializer
+spark.executor.extraJavaOptions  -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three" -Xmn5
 
 # TODO: n_slaves*executor_per_slave - 1 for YARN, n_slaves - for standalone
 spark.executor.instances  {{ n_slaves }}
