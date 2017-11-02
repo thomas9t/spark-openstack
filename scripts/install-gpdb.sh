@@ -1,3 +1,4 @@
+set -e
 cd ~/gpdb
 mkdir gpconfigs
 source /usr/local/gpdb/greenplum_path.sh
@@ -17,7 +18,7 @@ sed -i s/MASTER_HOSTNAME=mdw/MASTER_HOSTNAME=mycluster-master/g \
 awk '/^[[:space:]]*($|#)/{next} /mycluster/{print $2;}' /etc/hosts > \
     hostfile_gpinitsystem
 cd ../
-printf 'y\n' | gpinitsystem -c gpconfigs/gpinitsystem_config -h \
+yes | gpinitsystem -c gpconfigs/gpinitsystem_config -h \
     gpconfigs/hostfile_gpinitsystem
 createdb
 
@@ -44,5 +45,7 @@ for name in `awk '/^[[:space:]]*($|#)/{next} /mycluster/{print $2;}' /etc/hosts`
     scp -r apache-madlib-1.12-src ${name}:/home/ubuntu/gpdb/build/
 done
 
-cd ~/gpdb/build/
+
+cd ~/gpdb/build/apache-madlib-1.12-src/build
+echo "source /usr/local/gpdb/greenplum_path.sh" >> ~/.bashrc
 ./src/bin/madpack -p greenplum -s madlib install

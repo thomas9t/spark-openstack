@@ -20,23 +20,8 @@ source ~/.bashrc
 # Install OpenBLAS
 ##################
 
-# purge the one that comes via apt-get
-sudo apt-get -y purge libopenblas-dev
-sudo apt-get -y purge libopenblas-base
-
-# get the fortran compiler
-sudo apt-get -y update
-sudo apt-get -y install gfortran
-
-cd ~/Software
-git clone https://github.com/xianyi/OpenBLAS
-cd OpenBLAS/
-make clean
-make FC=gfortran USE_OPENMP=1
-sudo make PREFIX=/usr/lib/openblas install
-echo "export BLAS_LIB_DIR=/usr/lib/openblas" >> ~/.bashrc
-echo "export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/lib/openblas" >> ~/.bashrc
-source ~/.bashrc
+set -e
+sudo apt-get -y install libopenblas-dev libopenblas-base
 
 ###########
 # Install R
@@ -83,7 +68,6 @@ bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package
 bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 sudo -H pip install /tmp/tensorflow_pkg/tensorflow-1.4.0-cp27-cp27mu-linux_x86_64.whl
 
-
 #######################
 # Install Scala and SBT
 #######################
@@ -118,17 +102,6 @@ cd target
 echo "export COMMONS_MATH_JAR=`pwd`/commons-math3-3.6.1.jar" >> ~/.bashrc
 
 source ~/.bashrc
-
-########################################################
-# A bit of hackyness is needed to get R to use this BLAS
-########################################################
-
-cd /usr/lib/libblas
-sudo mv libblas.so _libblas.so
-sudo mv libblas.so.3 _libblas.so.3
-
-sudo ln -s /usr/lib/openblas/lib/libopenblas.so libblas.so
-sudo ln -s /usr/lib/openblas/lib/libopenblas.so libblas.so.3
 
 ############################
 # Install Greenplum Database

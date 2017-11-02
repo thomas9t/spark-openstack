@@ -43,10 +43,88 @@
   package: name={{ java_package }} state=present
   when: not skip_packages|default(False)
 
-
-
 - name: disable net.ipv6.conf.all.disable_ipv6
   sysctl: name=net.ipv6.conf.all.disable_ipv6 value=1 state=present
+  tags:
+    - prepare
+
+- name: disable net.ipv4.tcp_syncookies
+  sysctl: name=net.ipv4.tcp_syncookies value=1 state=present
+  tags:
+    - prepare
+
+- name: disable net.ipv4.conf.default.accept_source_route
+  sysctl: name=net.ipv4.conf.default.accept_source_route value=0 state=present
+  tags:
+    - prepare
+
+- name: disable net.ipv4.tcp_tw_recycle
+  sysctl: name=net.ipv4.tcp_tw_recycle value=1 state=present
+  tags:
+    - prepare
+
+- name: disable net.ipv4.ip_forward
+  sysctl: name=net.ipv4.tcp_syncookies value=0 state=present
+  tags:
+    - prepare
+
+- name: disable net.ipv4.tcp_max_syn_backlog
+  sysctl: name=net.ipv4.tcp_max_syn_backlog value=4096 state=present
+  tags:
+    - prepare
+
+- name: disable net.ipv4.conf.all.arp_filter
+  sysctl: name=net.ipv4.conf.all.arp_filter value=1 state=present
+  tags:
+    - prepare
+
+- name: disable net.ipv4.ip_local_port_range
+  sysctl: name=net.ipv4.ip_local_port_range value='1025 65535' state=present
+  tags:
+    - prepare
+
+- name: net.core.netdev_max_backlog
+  sysctl: name=net.core.netdev_max_backlog value=10000 state=present
+  tags:
+    - prepare
+
+- name: net.core.rmem_max
+  sysctl: name=net.core.rmem_max value=2097152 state=present
+  tags:
+    - prepare
+
+- name: net.core.wmem_max
+  sysctl: name=net.core.wmem_max value=2097152 state=present
+  tags:
+    - prepare
+
+- name: vm.overcommit_memory
+  sysctl: name=vm.overcommit_memory value=2 state=present
+  tags:
+    - prepare
+
+- name: kernel.shmmax
+  sysctl: name=kernel.shmmax value=500000000 state=present
+  tags:
+    - prepare
+
+- name: kernel.shmmni
+  sysctl: name=kernel.shmmni value=4096 state=present
+  tags:
+    - prepare
+
+- name: kernel.shmall
+  sysctl: name=kernel.shmall value=4000000000 state=present
+  tags:
+    - prepare
+
+- name: kernel.sysrq
+  sysctl: name=kernel.sem value=1 state=present
+  tags:
+    - prepare
+
+- name: kernel.sem
+  sysctl: name=kernel.sem value='250 512000 100 2048' state=present
   tags:
     - prepare
 
@@ -56,12 +134,22 @@
     - prepare
 
 - name: increase hard file limits
-  pam_limits: domain=* limit_type=hard limit_item=nofile value=1000000
+  pam_limits: domain=* limit_type=hard limit_item=nofile value=unlimited
+  tags:
+    - prepare
+
+- name: increase proc hard limits
+  pam_limits: domain=* limit_type=hard limit_item=nproc value=131072
+  tags:
+    - prepare
+
+- name: increase proc hard limits
+  pam_limits: domain=* limit_type=soft limit_item=nproc value=131072
   tags:
     - prepare
 
 - name: increase soft file limits
-  pam_limits: domain=* limit_type=soft limit_item=nofile value=1000000
+  pam_limits: domain=* limit_type=soft limit_item=nofile value=unlimited
 
 - name: create hadoop group
   group: name=hadoop state=present

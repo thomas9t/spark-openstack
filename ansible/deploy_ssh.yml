@@ -81,3 +81,11 @@
   tasks:
   - name: Install software
     script: "{{ playbook_dir }}/files/setup-nodes.sh"
+
+- name: "Install Madlib and GPDB"
+  hosts: "{{ cluster_name }}_master"
+  become: yes
+  become_user: ubuntu
+  tasks:
+  - name: Install software
+    script: "{{ playbook_dir }}/../scripts/install-gpdb.sh"
