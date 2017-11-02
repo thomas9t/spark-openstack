@@ -51,8 +51,6 @@
   - install
   - es_install
 
-
-
 - hosts: "{{ cluster_name }}_slaves"
   become: true
   become_user: root

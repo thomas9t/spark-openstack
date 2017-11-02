@@ -73,3 +73,11 @@
       with_items: "{{ play_hosts }}"
     #  template: src=templates/hosts.j2 dest=/etc/hosts
   tags: prepare
+
+- name: "Install requisite software on nodes"
+  hosts: "{{ cluster_name }}_master:{{ cluster_name }}_slaves"
+  become: yes
+  become_user: ubuntu
+  tasks:
+  - name: Install software
+    script: "{{ playbook_dir }}/files/setup-nodes.sh"
