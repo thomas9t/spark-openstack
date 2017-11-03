@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -e
 cd ~/gpdb
 mkdir -p gpconfigs
