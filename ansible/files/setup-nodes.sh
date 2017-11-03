@@ -5,7 +5,18 @@
 ############################
 
 sudo apt-get -y update
-sudo apt-get -y install openjdk-8-jdk
+echo debconf shared/accepted-oracle-license-v1-1 select true | \
+  sudo debconf-set-selections
+echo debconf shared/accepted-oracle-license-v1-1 seen true | \
+  sudo debconf-set-selections
+printf '\n' | sudo apt-add-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get -y install oracle-java8-installer
+sudo apt-get -y install sbt
+
+if [ -f ~/SETUP_COMPLETE ]; then
+    exit 0
+fi
 
 #################
 # Install OpenMPI
@@ -16,14 +27,27 @@ echo "export PATH=/usr/lib64/openmpi/bin:$PATH" >> ~/.bashrc
 echo "export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib" >> ~/.bashrc
 source ~/.bashrc
 
-echo "export BENCHMARK_PROJECT_ROOT=/home/ubuntu/benchmark" >> ~/.bashrc
-
 ##################
 # Install OpenBLAS
 ##################
 
-set -e
-sudo apt-get -y install libopenblas-dev libopenblas-base
+# purge the one that comes via apt-get
+sudo apt-get -y purge libopenblas-dev
+sudo apt-get -y purge libopenblas-base
+
+# get the fortran compiler
+sudo apt-get -y update
+sudo apt-get -y install gfortran
+
+cd ~/Software
+git clone https://github.com/xianyi/OpenBLAS
+cd OpenBLAS/
+make clean
+make FC=gfortran USE_OPENMP=1
+sudo make PREFIX=/usr/lib/openblas install
+echo "export BLAS_LIB_DIR=/usr/lib/openblas" >> ~/.bashrc
+echo "export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/lib/openblas" >> ~/.bashrc
+source ~/.bashrc
 
 ###########
 # Install R
@@ -70,6 +94,7 @@ bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package
 bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 sudo -H pip install /tmp/tensorflow_pkg/tensorflow-1.4.0-cp27-cp27mu-linux_x86_64.whl
 
+
 #######################
 # Install Scala and SBT
 #######################
@@ -78,6 +103,7 @@ echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.li
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
 sudo apt-get update
 sudo apt-get install sbt
+sudo apt-get install bc
 
 ############
 # Get Eigen3
@@ -104,6 +130,17 @@ cd target
 echo "export COMMONS_MATH_JAR=`pwd`/commons-math3-3.6.1.jar" >> ~/.bashrc
 
 source ~/.bashrc
+
+########################################################
+# A bit of hackyness is needed to get R to use this BLAS
+########################################################
+
+cd /usr/lib/libblas
+sudo mv libblas.so _libblas.so
+sudo mv libblas.so.3 _libblas.so.3
+
+sudo ln -s /usr/lib/openblas/lib/libopenblas.so libblas.so
+sudo ln -s /usr/lib/openblas/lib/libopenblas.so libblas.so.3
 
 ############################
 # Install Greenplum Database
@@ -157,3 +194,5 @@ sudo chown -R $me:$me /data/master
 sudo chown -R $me:$me /data1
 sudo chown -R $me:$me /data2
 sudo ldconfig
+
+echo "COMPLETE" > ~/SETUP_COMPLETE
