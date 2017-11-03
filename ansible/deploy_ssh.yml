@@ -87,11 +87,12 @@
   become: yes
   become_user: ubuntu
   tasks:
-  - name: Install software
-    copy: 
-      src: "{{ playbook_dir }}/files/install-gpdb.sh"
-      dest: /home/ubuntu/install-gpdb.sh
-      owner: ubuntu
-      group: ubuntu
-      mode: 777
-    command: source /home/ubuntu/install-gpdb.sh
+    - name: Copy the relevant script
+      copy: 
+        src: "{{ playbook_dir }}/files/install-gpdb.sh"
+        dest: "/home/ubuntu/install-gpdb.sh"
+        owner: ubuntu
+        group: ubuntu
+        mode: 777
+    - name: Run the script
+      command: source /home/ubuntu/install-gpdb.sh
