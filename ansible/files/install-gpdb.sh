@@ -1,6 +1,6 @@
 set -e
 cd ~/gpdb
-mkdir gpconfigs
+mkdir -p gpconfigs
 source /usr/local/gpdb/greenplum_path.sh
 cp $GPHOME/docs/cli_help/gpconfigs/gpinitsystem_config \
     ~/gpdb/gpconfigs/gpinitsystem_config
