@@ -16,6 +16,8 @@ echo "export PATH=/usr/lib64/openmpi/bin:$PATH" >> ~/.bashrc
 echo "export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib" >> ~/.bashrc
 source ~/.bashrc
 
+echo "export BENCHMARK_PROJECT_ROOT=/home/ubuntu/benchmark" >> ~/.bashrc
+
 ##################
 # Install OpenBLAS
 ##################
