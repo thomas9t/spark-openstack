@@ -9,9 +9,14 @@ echo debconf shared/accepted-oracle-license-v1-1 select true | \
   sudo debconf-set-selections
 echo debconf shared/accepted-oracle-license-v1-1 seen true | \
   sudo debconf-set-selections
-sudo apt-add-repository ppa:webupd8team/java
+printf '\n' | sudo apt-add-repository ppa:webupd8team/java
 sudo apt-get update
 sudo apt-get -y install oracle-java8-installer
+sudo apt-get -y install sbt
+
+if [ -f ~/SETUP_COMPLETE ]; then
+    exit 0
+fi
 
 #################
 # Install OpenMPI
@@ -189,3 +194,5 @@ sudo chown -R $me:$me /data/master
 sudo chown -R $me:$me /data1
 sudo chown -R $me:$me /data2
 sudo ldconfig
+
+echo "COMPLETE" > ~/SETUP_COMPLETE

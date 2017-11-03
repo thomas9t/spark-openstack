@@ -88,4 +88,4 @@
   become_user: ubuntu
   tasks:
   - name: Install software
-    script: "{{ playbook_dir }}/../scripts/install-gpdb.sh"
+    script: "{{ playbook_dir }}/files/install-gpdb.sh"
