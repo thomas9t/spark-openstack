@@ -95,4 +95,4 @@
         group: ubuntu
         mode: 777
     - name: Run the script
-      command: source /home/ubuntu/install-gpdb.sh
+      command: /home/ubuntu/install-gpdb.sh
