@@ -27,6 +27,13 @@ echo "export PATH=/usr/lib64/openmpi/bin:$PATH" >> ~/.bashrc
 echo "export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib" >> ~/.bashrc
 source ~/.bashrc
 
+#############
+# Install NFS
+#############
+
+sudo apt-get -y install nfs-kernel-server
+sudo apt-get -y install nfs-common
+
 ##################
 # Install OpenBLAS
 ##################
@@ -195,4 +202,5 @@ sudo chown -R $me:$me /data1
 sudo chown -R $me:$me /data2
 sudo ldconfig
 
+echo "export BENCHMARK_PROJECT_ROOT=/home/ubuntu/benchmark" >> ~/.bashrc
 echo "COMPLETE" > ~/SETUP_COMPLETE

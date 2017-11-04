@@ -17,11 +17,15 @@ output="declare -a DATA_DIRECTORY=(/data1/primary /data1/primary\
 sed -i s+'${input}'+'${output}'+g gpinitsystem_config
 sed -i s/MASTER_HOSTNAME=mdw/MASTER_HOSTNAME=mycluster-master/g \
     gpinitsystem_config
+    
 awk '/^[[:space:]]*($|#)/{next} /mycluster/{print $2;}' /etc/hosts > \
     hostfile_gpinitsystem
 cd ../
 yes | gpinitsystem -c gpconfigs/gpinitsystem_config -h \
     gpconfigs/hostfile_gpinitsystem
+echo "export MASTER_DATA_DIRECTORY=/data/master/gpseg-1" >> ~/.bashrc
+source ~/.bashrc
+source /usr/local/gpdb/greenplum_path.sh
 createdb
 
 echo "export MASTER_DATA_DIRECTORY=/data/master/gpseg-1" >> ~/.bashrc
@@ -46,7 +50,6 @@ for name in `awk '/^[[:space:]]*($|#)/{next} /mycluster/{print $2;}' /etc/hosts`
 
     scp -r apache-madlib-1.12-src ${name}:/home/ubuntu/gpdb/build/
 done
-
 
 cd ~/gpdb/build/apache-madlib-1.12-src/build
 echo "source /usr/local/gpdb/greenplum_path.sh" >> ~/.bashrc
