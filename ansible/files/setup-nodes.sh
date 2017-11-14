@@ -34,28 +34,6 @@ source ~/.bashrc
 sudo apt-get -y install nfs-kernel-server
 sudo apt-get -y install nfs-common
 
-##################
-# Install OpenBLAS
-##################
-
-# purge the one that comes via apt-get
-sudo apt-get -y purge libopenblas-dev
-sudo apt-get -y purge libopenblas-base
-
-# get the fortran compiler
-sudo apt-get -y update
-sudo apt-get -y install gfortran
-
-cd ~/Software
-git clone https://github.com/xianyi/OpenBLAS
-cd OpenBLAS/
-make clean
-make FC=gfortran USE_OPENMP=1
-sudo make PREFIX=/usr/lib/openblas install
-echo "export BLAS_LIB_DIR=/usr/lib/openblas" >> ~/.bashrc
-echo "export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/lib/openblas" >> ~/.bashrc
-source ~/.bashrc
-
 ###########
 # Install R
 ###########
@@ -65,6 +43,7 @@ gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
 gpg -a --export E084DAB9 | sudo apt-key add -
 sudo apt-get -y update
 sudo apt-get -y install r-base r-base-dev
+sudo apt-get -y install libopenblas-dev
 
 ##############################
 # Install Python related stuff
