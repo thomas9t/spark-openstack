@@ -78,8 +78,7 @@ git checkout r1.4
 printf '\n\nn\nn\nn\nn\nn\nn\nn\nn\n' | ./configure
 bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package
 bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-sudo -H pip install /tmp/tensorflow_pkg/tensorflow-1.4.0-cp27-cp27mu-linux_x86_64.whl
-
+sudo -H pip install /tmp/tensorflow_pkg/`ls /tmp/tensorflow_pkg`
 
 #######################
 # Install Scala and SBT
