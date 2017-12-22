@@ -18,6 +18,9 @@ if [ -f ~/SETUP_COMPLETE ]; then
     exit 0
 fi
 
+git config --global user.email "nunya@business.com"
+git config --global user.name "R Daneel Olivaw"
+
 #################
 # Install OpenMPI
 #################
