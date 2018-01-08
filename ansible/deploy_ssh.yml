@@ -134,7 +134,7 @@
         - prepare
 
     - name: vm.overcommit_memory
-      sysctl: name=vm.overcommit_memory value=2 state=present
+      sysctl: name=vm.overcommit_memory value=1 state=present
       tags:
         - prepare
 
@@ -169,7 +169,7 @@
         - prepare
 
     - name: increase hard file limits
-      pam_limits: domain=* limit_type=hard limit_item=nofile value=unlimited
+      pam_limits: domain=* limit_type=hard limit_item=nofile value=131093
       tags:
         - prepare
 
@@ -184,7 +184,7 @@
         - prepare
 
     - name: increase soft file limits
-      pam_limits: domain=* limit_type=soft limit_item=nofile value=unlimited
+      pam_limits: domain=* limit_type=soft limit_item=nofile value=131093
       
      - name: configure pam
        lineinfile:
