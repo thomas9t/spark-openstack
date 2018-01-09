@@ -186,15 +186,15 @@
     - name: increase soft file limits
       pam_limits: domain=* limit_type=soft limit_item=nofile value=131093
       
-     - name: configure pam
-       lineinfile:
-         create=true dest=/etc/pam.d/common-session
-         line="session required pam_limits.so"
+    - name: configure pam
+      lineinfile:
+        create=true dest=/etc/pam.d/common-session
+        line="session required pam_limits.so"
      
-     - name: configure pam-noninteractive
-       lineinfile:
-         create=true dest=/etc/pam.d/common-session-noninteractive
-         line="session required pam_limits.so"
+    - name: configure pam-noninteractive
+      lineinfile:
+        create=true dest=/etc/pam.d/common-session-noninteractive
+        line="session required pam_limits.so"
        
 - name: "Install requisite software on nodes"
   hosts: "{{ cluster_name }}_master:{{ cluster_name }}_slaves"
