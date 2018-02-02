@@ -11,11 +11,11 @@
 # OpenStack API is version 3. For example, your cloud provider may implement
 # Image API v1.1, Block Storage API v2, and Compute API v2.0. OS_AUTH_URL is
 # only for the Identity API served through keystone.
-export OS_AUTH_URL=http://ctl.bench-cluster4.orion-pg0.clemson.cloudlab.us:5000/v3
+export OS_AUTH_URL=http://ctl:5000/v3
 
 # With the addition of Keystone we have standardized on the term **project**
 # as the entity that owns the resources.
-export OS_PROJECT_ID=1e91038f453442e9b28ffb15d4caebc8
+export OS_PROJECT_ID=2bb96444d1544ba79f7b8125196edd21
 export OS_PROJECT_NAME="admin"
 export OS_USER_DOMAIN_NAME="default"
 if [ -z "$OS_USER_DOMAIN_NAME" ]; then unset OS_USER_DOMAIN_NAME; fi
@@ -29,7 +29,7 @@ unset OS_TENANT_NAME
 export OS_USERNAME="admin"
 
 # With Keystone you pass the keystone password.
-export OS_PASSWORD=ca8d5f46694b
+export OS_PASSWORD=44c0e4980134
 
 # If your configuration has multiple regions, we set that information here.
 # OS_REGION_NAME is optional and only valid in certain environments.

@@ -71,17 +71,17 @@ sudo -H pip install --upgrade gslab_tools
 # Install Bazel and TensorFlow
 ##############################
 
-echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
-sudo apt-get update && sudo apt-get -y install bazel
+#echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+#curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+#sudo apt-get update && sudo apt-get -y install bazel
 
-git clone https://github.com/tensorflow/tensorflow 
-cd tensorflow
-git checkout r1.4
-printf '\n\nn\nn\nn\nn\nn\nn\nn\nn\n' | ./configure
-bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package
-bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-sudo -H pip install /tmp/tensorflow_pkg/`ls /tmp/tensorflow_pkg`
+#git clone https://github.com/tensorflow/tensorflow 
+#cd tensorflow
+#git checkout r1.4
+#printf '\n\nn\nn\nn\nn\nn\nn\nn\nn\n' | ./configure
+#bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package
+#bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+#sudo -H pip install /tmp/tensorflow_pkg/`ls /tmp/tensorflow_pkg`
 
 #######################
 # Install Scala and SBT
@@ -157,7 +157,7 @@ sudo make install
 
 sudo -H pip install --upgrade lockfile paramiko setuptools epydoc
 sudo -H pip install --upgrade psutil
-sudo -H pip install --upgrade conan
+sudo -H pip install conan==0.30.3
 
 cd ~/gpdb/build
 git clone https://github.com/greenplum-db/gpdb
